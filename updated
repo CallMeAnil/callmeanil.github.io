@@ -1,0 +1,136 @@
+function getSmallestDifference(s1, s2) {
+    var sym = '*';
+    var s1Length = s1.length,
+        s2Length = s2.length;
+
+    var s1Unmasked = s1.replace(sym, ''),
+        s2Unmasked = s2.replace(sym, '');
+
+    var s1UnmaskedLength = s1Unmasked.length,
+        s2UnmaskedLength = s2Unmasked.length;
+
+    var maskedS1Index = s1.indexOf(sym),
+        maskedS2Index = s2.indexOf(sym);
+
+console.log("hi");
+    //first condition *,a*=a, good*luck,*=goodluck
+    if (s1Length === 1 || s2Length === 1) {
+        if (s1UnmaskedLength > s2UnmaskedLength) {
+            return s1Unmasked;
+        } else {
+            return s2Unmasked;
+        }
+    }
+    //second condition using indexof: *top,*coder:notpossible,
+    if (maskedS1Index === maskedS2Index) {
+        if (s1Unmasked === s2Unmasked) {
+            return s1Unmasked;
+        }
+        return 'Impossible';
+    }
+    if ((maskedS1Index === s1Length - 1 && maskedS2Index === s2Length - 1) || (maskedS1Index === 0 || maskedS2Index === 0)) {
+        var flag = true;
+        if (s1Length > s2Length) {
+            flag = s1.indexOf(s2) > -1 ? true : false;
+        } else {
+            flag = s2.indexOf(s1) > -1 ? true : false;
+        }
+        if (!flag) {
+            return 'Impossible';
+        }
+    }
+    // LOGIC STARTS HERE
+    var intersect = FindIntersection(s1Unmasked, s2Unmasked);
+
+    var s1Diff = s1Unmasked.replace(intersect, ''),
+        s2Diff = s2Unmasked.replace(intersect, '');
+    var s1DiffIndex = s1Unmasked.indexOf(intersect),
+        s2DiffIndex = s2Unmasked.indexOf(intersect);
+
+    //condition3 a*,*b||*a,b*==ab, *sat, usa* = usat
+    if ((maskedS1Index === 0 && maskedS2Index == s2Length - 1) || (maskedS2Index === 0 && maskedS1Index === s1Length - 1)) {
+        //condition 4 *thirdsample, *sampleTest = thirdsampletest
+        if (s1DiffIndex > s2DiffIndex) {
+            return s1Diff + intersect + s2Diff;
+        } else if (s2DiffIndex < s1DiffIndex) {
+            return s2Diff + intersect + s1Diff;
+        }
+        return s1Unmasked + s2Unmasked;
+    }
+    //for all other conditions
+    var str1 = s1.split('*'),
+        str2 = s2.split('*');
+    var compare1 = swapSections(str1[0], str2[0], FindIntersection);
+    var compare2 = swapSections(str1[1], str2[1], FindIntersection);
+
+    var replacedIntersection11 = (str1[0].indexOf(compare1) > -1) ? (str1[0].replace(compare1, '')) : (str1[0].replace(compare2, ''));
+    var replacedIntersection12 = (str1[1].indexOf(compare1) > -1) ? (str1[1].replace(compare1, '')) : (str1[1].replace(compare2, ''));
+
+    var replacedIntersection21 = (str2[0].indexOf(compare1) > -1) ? (str2[0].replace(compare1, '')) : (str2[0].replace(compare2, ''));
+    var replacedIntersection22 = (str2[1].indexOf(compare1) > -1) ? (str2[1].replace(compare1, '')) : (str2[1].replace(compare2, ''));
+    var concatedIntersection1 = replacedIntersection11.concat(replacedIntersection12);
+    var concatedIntersection2 = replacedIntersection21.concat(replacedIntersection22);
+
+    var cIntersect = FindIntersection(concatedIntersection1, concatedIntersection2);
+    var intersectCompared1 = concatedIntersection1.replace(cIntersect, ''),
+        intersectCompared2 = concatedIntersection2.replace(cIntersect, '');
+    //console.log(intersectCompared1);
+
+    if (intersectCompared1 === intersectCompared2) {
+        var str1Intersect = s1.replace('*', intersectCompared1),
+            str2Intersect = s2.replace('*', intersectCompared1);
+        if (str1Intersect === str2Intersect) {
+            return str1Intersect;
+        } else {
+            return 'Impossible';
+        }
+    } else {
+        return 'Impossible';
+    }
+
+
+}
+/*
+helper funcitons */
+function swapSections(s1, s2, fn) {
+    if (s1.length > s2.length) {
+        return fn(s1, s2);
+    } else {
+        return fn(s2, s1);
+    }
+
+}
+
+function FindIntersectionFromStart(a, b) {
+    for (var i = a.length; i > 0; i--) {
+        d = a.substring(0, i);
+        j = b.indexOf(d);
+        if (j >= 0) {
+            return ({
+                position: j,
+                length: i
+            });
+        }
+    }
+
+    return null;
+}
+
+function FindIntersection(a, b) {
+    var bestResult = null;
+    for (var i = 0; i < a.length - 1; i++) {
+        var result = FindIntersectionFromStart(a.substring(i), b);
+        if (result) {
+            if (!bestResult) {
+                bestResult = result;
+            } else {
+                if (result.length > bestResult.length) {
+                    bestResult = result;
+                }
+            }
+        }
+        if (bestResult && bestResult.length >= a.length - i)
+            break;
+    }
+    return (b.substring(bestResult.position, bestResult.position + bestResult.length));
+}
