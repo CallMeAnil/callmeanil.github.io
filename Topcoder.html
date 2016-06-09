@@ -1,0 +1,172 @@
+x='t*pcoder',y='topc*der'
+function diff(a1, a2) {
+  return a1.concat(a2).filter(function (val, index, arr) {
+    return arr.indexOf(val) === arr.lastIndexOf(val);
+  });
+}
+function diff(a1,a2){
+return difference = a1.filter(function (x) {
+  return a2.indexOf(x) == -1;
+}).concat(a2.filter(function (x) {
+  return a1.indexOf(x) == -1;
+}));
+}
+function FindIntersectionFromStart(a,b){
+    for(var i=a.length;i>0;i--){
+        d = a.substring(0,i);
+        j = b.indexOf(d);
+        if (j>=0){
+            return ({position:j,length:i});
+        }
+    }
+
+    return null;
+}
+    
+function FindIntersection(a,b){
+    var bestResult = null;
+    for(var i=0;i<a.length-1;i++){
+        var result = FindIntersectionFromStart(a.substring(i),b);
+        if (result){
+            if (!bestResult){
+                bestResult = result;
+            } else {
+                if (result.length>bestResult.length){
+                    bestResult = result;
+                }
+            }
+        }
+        if(bestResult && bestResult.length>=a.length-i)
+            break;
+    }	
+    alert(b.substring(bestResult.position,bestResult.position+bestResult.length));
+    return bestResult;
+}
+
+function getSmallestDifference(string1, string2){
+var s1 = string1.split('*'),
+	s2 = string2.split('*');
+var compare1 = diff(s1[0].split(''),s2[0].split('')).join(''),
+    compare2 = diff(s1[1].split(''),s2[1].split('')).join('');
+var pos1= string1.indexOf(compare1),
+	pos2 =string2.indexOf(compare2);
+
+var diff1 = string1.charAt(pos1>-1?compare1.length+1:0),
+    diff2 = string2.charAt(pos2>-1?compare2.length-1:0)
+
+string1.charAt(compare1.length+pos1);
+string2.charAt(compare2.length-pos2);
+
+string2.charAt(compare2.length+1)
+
+string1.charAt((pos1-1)+compare1.length+1)
+string2.charAt(pos2-1)
+
+string2.charAt(compare1.length+1)
+"o"
+string1.charAt(compare2.length+1);
+"*"
+
+var string1Mask=string1.charAt(compare1.length+1),
+	string2Mask=string2.charAt(compare2.length+1);
+
+var string1Symbol = string1.charAt(compare2.length+1),
+string2Symbol = string2.charAt(compare1.length+1);
+
+if(string1Mask===string2Mask){
+	if(string1.replace('*',string1Mask)===string2.replace('*',string2Mask)){
+		alert(string1Mask);
+	}
+}
+console.log(string1);
+}
+
+
+///////////////////////////////////////////////////////////////////////x='t*pcoder',y='topc*der'
+function diff(a1, a2) {
+  return a1.concat(a2).filter(function (val, index, arr) {
+    return arr.indexOf(val) === arr.lastIndexOf(val);
+  });
+}
+function FindIntersectionFromStart(a,b){
+    for(var i=a.length;i>0;i--){
+        d = a.substring(0,i);
+        j = b.indexOf(d);
+        if (j>=0){
+            return ({position:j,length:i});
+        }
+    }
+
+    return null;
+}
+    
+function FindIntersection(a,b){
+    var bestResult = null;
+    for(var i=0;i<a.length-1;i++){
+        var result = FindIntersectionFromStart(a.substring(i),b);
+        if (result){
+            if (!bestResult){
+                bestResult = result;
+            } else {
+                if (result.length>bestResult.length){
+                    bestResult = result;
+                }
+            }
+        }
+        if(bestResult && bestResult.length>=a.length-i)
+            break;
+    }	
+    return (b.substring(bestResult.position,bestResult.position+bestResult.length));
+    return bestResult;
+}
+function swapSections(s1,s2, fn){
+if(s1.length>s2.length){
+	return fn(s1,s2);
+}else{
+	return fn(s2,s1);
+}
+
+}
+function getSmallestDifference(string1, string2){
+var s1 = string1.split('*'),
+	s2 = string2.split('*');
+// var compare1 = diff(s1[0].split(''),s2[0].split('')).join(''),
+//     compare2 = diff(s1[1].split(''),s2[1].split('')).join('');
+var compare1 = swapSections(s1[0],s2[0],FindIntersection);
+var compare2 = swapSections(s1[1],s2[1],FindIntersection);
+
+// var r11 = s1[0].replace(compare1,''):,
+// 	r12 = s1[1].replace(compare2,''),
+// 	r21 = s2[0].replace(compare1,''),
+// 	r22 = s2[1].replace(compare2,'');
+
+var replacedIntersection11 = (s1[0].indexOf(compare1)>-1)?(s1[0].replace(compare1,'')):(s1[0].replace(compare2,''));
+var replacedIntersection12 = (s1[1].indexOf(compare1)>-1)?(s1[1].replace(compare1,'')):(s1[1].replace(compare2,''));
+
+var replacedIntersection21 = (s2[0].indexOf(compare1)>-1)?(s2[0].replace(compare1,'')):(s2[0].replace(compare2,''));
+var replacedIntersection22 = (s2[1].indexOf(compare1)>-1)?(s2[1].replace(compare1,'')):(s2[1].replace(compare2,''));
+var concatedIntersection1 = replacedIntersection11.concat(replacedIntersection12);
+var concatedIntersection2 = replacedIntersection21.concat(replacedIntersection22);
+// var compare1 = FindIntersection(s1[0],s2[0]),
+//     compare2 = FindIntersection(s1[1],s2[1]);
+
+var intersect = FindIntersection(concatedIntersection1, concatedIntersection2);
+var intersectCompared1 = concatedIntersection1.replace(intersect,''),
+	intersectCompared2 = concatedIntersection2.replace(intersect,'');
+	console.log(intersectCompared1);
+
+if(intersectCompared1 === intersectCompared2){
+var s1Intersect = string1.replace('*', intersectCompared1),
+    s2Intersect = string2.replace('*', intersectCompared1);
+if(s1Intersect === s2Intersect){
+alert("Holla. The smallest match is:"+intersectCompared1);
+}
+else{
+alert("Mission Impossible");
+}	
+}
+else{
+	alert("Mission Notpossible")
+}
+
+}
